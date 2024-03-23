@@ -153,3 +153,4 @@ amplifytools.xcconfig
 #amplify-do-not-edit-end
 ios/.xcode.env
 ios/Podfile.lock
+*-lock.json
