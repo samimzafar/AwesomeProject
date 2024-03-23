@@ -5,4 +5,5 @@ export const AppColors = {
   white: 'rgba(256, 256, 256, 1)',
   goldYellow: '#FECC53',
   black3: 'rgba(0,0,0,.3)',
+  red: 'rgba(255, 0, 0, 0.5) ',
 };

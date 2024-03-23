@@ -1,21 +1,16 @@
-import {
-  FlatList,
-  ImageBackground,
-  SafeAreaView,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import {SCREEN_CONST} from '../../utils/Constants';
 import {useQuery} from 'react-query';
 import {retrievePosts} from '../../services';
 import {styles} from './styles';
-import {ImageConst} from '../../utils/ImageConstants';
 import {AppColors} from '../../utils/ColorConstants';
 import LinearGradient from 'react-native-linear-gradient';
 import {height} from 'react-native-dimension';
 import {LoaderComponent} from '../../component/Loader';
 import {TextHeader} from '../../component/TextHeader';
 import {ViewButton} from '../../component/ViewButton';
+import {ErrorComponent} from '../../component/ErrorComponent';
+import {ScreenWrapper} from '../../component/ScreenWrapper/ScreenWrapper';
 export const Home = ({navigation}) => {
   const {
     data: products,
@@ -23,7 +18,6 @@ export const Home = ({navigation}) => {
     isLoading,
   } = useQuery('postsData', retrievePosts);
 
-  if (error) return <Text>An error occurred: {error.message}</Text>;
   const onPressHanlder = product => {
     navigation.navigate(SCREEN_CONST.DETAILS_SCREEN, {product});
   };
@@ -43,29 +37,26 @@ export const Home = ({navigation}) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ImageBackground
-        style={styles.mainContainer}
-        source={ImageConst.homeBackground}>
-        <LinearGradient
-          colors={AppColors.lightPinkGrayGradient}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={styles.linearGradientStyle}>
-          <View style={styles.heightSpacer(1)} />
-          <View style={{marginBottom: height(1.3)}}>
-            <TextHeader />
-          </View>
-          {isLoading && <LoaderComponent />}
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.contentContainerStyle}
-            data={products}
-            keyExtractor={product => product.id.toString()}
-            renderItem={renderProductList}
-          />
-        </LinearGradient>
-      </ImageBackground>
-    </SafeAreaView>
+    <ScreenWrapper>
+      <LinearGradient
+        colors={AppColors.lightPinkGrayGradient}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={styles.linearGradientStyle}>
+        <View style={styles.heightSpacer(1)} />
+        <View style={{marginBottom: height(1.3)}}>
+          <TextHeader />
+        </View>
+        {isLoading && <LoaderComponent />}
+        {error && <ErrorComponent errorMessage={error.message} />}
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainerStyle}
+          data={products}
+          keyExtractor={product => product.id.toString()}
+          renderItem={renderProductList}
+        />
+      </LinearGradient>
+    </ScreenWrapper>
   );
 };
